@@ -186,29 +186,40 @@ def generate_launch_description():
         ],
     )
 
-    frenet_planner_node_param_path = os.path.join(
-        get_package_share_directory("frenet_planner_node"),
+    sampler_node_param_path = os.path.join(
+        get_package_share_directory("sampler_node"),
         "config",
-        "frenet_planner_node.config.yaml",
+        "sampler_node.config.yaml",
     )
-    with open(frenet_planner_node_param_path, "r") as f:
-        frenet_planner_node_param = yaml.safe_load(f)["/**"]["ros__parameters"]
+    with open(sampler_node_param_path, "r") as f:
+        sampler_node_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
-    frenet_planner_node = Node(
-        package="frenet_planner_node",
-        executable='frenet_planner_node_exe',
-        name="frenet_planner_node",
+    sampler_node = Node(
+        package="sampler_node",
+        executable='path_sampler_node_exe',
+        name="path_sampler_node",
         namespace="",
         remappings=[
             ("~/output/trajectory", "/planning/scenario_planning/lane_driving/trajectory"),
             ("~/input/objects", "/perception/object_recognition/objects"),
-            ("~/input/odometry", "/localization/kinematic_state"),
+            ("~/input/steer", "/vehicle/status/steering_status"),
             ("~/input/path", LaunchConfiguration("input_path_topic")),
+            ("~/input/map", LaunchConfiguration("input_path_topic")),
+            ("~/input/vector_map", LaunchConfiguration("map_topic_name")),
+            ("~/input/route", LaunchConfiguration("input_route_topic_name")),
         ],
         parameters=[
             common_param,
-            # frenet_planner_node_param,
+            # sampler_node_param,
         ],
+        prefix=['konsole -e gdb -ex run --args'],  # for debugging
+        # prefix=['valgrind --tool=callgrind'],  # for profiling
+        # prefix=['valgrind --leak-check=full \
+        #  --show-leak-kinds=all \
+        #  --track-origins=yes \
+        #  --verbose \
+        #  --log-file=valgrind-out.txt'],
+
     )
 
     surround_obstacle_checker_loader = LoadComposableNodes(
@@ -243,11 +254,15 @@ def generate_launch_description():
             DeclareLaunchArgument("use_surround_obstacle_check", default_value="true"),
             DeclareLaunchArgument("use_intra_process", default_value="false"),
             DeclareLaunchArgument("use_multithread", default_value="false"),
+            DeclareLaunchArgument("map_topic_name", default_value="/map/vector_map"),
+            DeclareLaunchArgument(
+                "input_route_topic_name", default_value="/planning/mission_planning/route"
+            ),
             set_container_executable,
             set_container_mt_executable,
             # container,
             # surround_obstacle_checker_loader,
             # relay_loader,
-            frenet_planner_node
+            sampler_node
         ]
     )
