@@ -40,6 +40,17 @@ def generate_launch_description():
     with open(freespace_planner_param_path, "r") as f:
         freespace_planner_param = yaml.safe_load(f)["/**"]["ros__parameters"]
 
+    auto_parking_planner_param_path = os.path.join(
+        get_package_share_directory('planning_launch'),
+        'config',
+        'scenario_planning',
+        'parking',
+        'auto_parking_planner',
+        'auto_parking_planner.param.yaml',
+    )
+    with open(auto_parking_planner_param_path, 'r') as f:
+        auto_parking_planner_param = yaml.safe_load(f)['/**']['ros__parameters']
+
     container = ComposableNodeContainer(
         name="parking_container",
         namespace="",
@@ -106,6 +117,21 @@ def generate_launch_description():
                     {"use_intra_process_comms": LaunchConfiguration("use_intra_process")}
                 ],
             ),
+            ComposableNode(
+                package='parking_route_planner',
+                plugin="parking_route_planner",
+                name='parking_route_planner',
+                remappings=[
+                    ('~/input/vector_map', '/map/vector_map'),
+                    ('~/input/state', '/autoware/state'),
+                    ('~/input/twist', '/vehicle/status/twist'),
+                    ('~/input/trajectory', '/planning/scenario_planning/trajectory'),
+                    ('~/output/route', '/planning/mission_planning/route'),
+                ],
+                parameters=[
+                    auto_parking_planner_param
+                ],
+            )
         ],
     )
 
