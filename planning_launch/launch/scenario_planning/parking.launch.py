@@ -128,7 +128,7 @@ def generate_launch_description():
                 description="use ROS2 component container communication",
             ),
             DeclareLaunchArgument(
-                "use_multithread", default_value="false", description="use multithread"
+                "use_multithread", default_value="true", description="use multithread"
             ),
             set_container_executable,
             set_container_mt_executable,
