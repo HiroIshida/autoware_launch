@@ -41,7 +41,7 @@
       <arg name="common_param_path" value="$(var common_param_path)"/>
     </include>
     <!-- parking -->
-    <include file="$(find-pkg-share planning_launch)/launch/scenario_planning/parking.launch.py">
+    <include file="$(find-pkg-share planning_launch)/launch/scenario_planning/debug_parking.launch.py">
     </include>
   </group>
 </launch>
