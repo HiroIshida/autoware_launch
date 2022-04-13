@@ -66,7 +66,7 @@ def generate_launch_description():
         parameters=[
             auto_parking_planner_param
         ],
-        #prefix=['xterm -e gdb -ex run --args'],
+        prefix=['xterm -e gdb -ex run --args'],
     )
 
     node2 = Node(
