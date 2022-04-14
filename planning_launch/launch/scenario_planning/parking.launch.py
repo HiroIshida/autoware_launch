@@ -74,6 +74,7 @@ def generate_launch_description():
                 ],
                 parameters=[
                     {
+                        "activate_by_scenario": False,
                         "costmap_frame": "map",
                         "vehicle_frame": "base_link",
                         "map_frame": "map",
