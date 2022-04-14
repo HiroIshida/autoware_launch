@@ -109,6 +109,23 @@ def generate_launch_description():
         ],
     )
 
+    node3 = Node(
+        package='auto_parking_planner',
+        name='auto_parking_planner',
+        executable='auto_parking_planner',
+        remappings=[
+            ('~/input/vector_map', '/map/vector_map'),
+            ('~/input/state', '/autoware/state'),
+            ('~/input/twist', '/vehicle/status/twist'),
+            ('~/input/trajectory', '/planning/scenario_planning/trajectory'),
+            ('~/output/route', '/planning/mission_planning/route'),
+        ],
+        parameters=[
+            auto_parking_planner_param
+        ],
+        prefix=['xterm -e gdb -ex run --args'],
+    )
+
     set_container_executable = SetLaunchConfiguration(
         "container_executable",
         "component_container",
@@ -132,6 +149,6 @@ def generate_launch_description():
             ),
             set_container_executable,
             set_container_mt_executable,
-            GroupAction([PushRosNamespace("parking"), node1, node2]),
+            GroupAction([PushRosNamespace("parking"), node1, node2, node3]),
         ]
     )
