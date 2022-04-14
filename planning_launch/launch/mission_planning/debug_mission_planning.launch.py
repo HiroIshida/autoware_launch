@@ -47,7 +47,7 @@ def generate_launch_description():
     node2 = Node(
         package='mission_planner',
         name='goal_pose_visualizer',
-        executable='goal_pose_visualizer_node',
+        executable='goal_pose_visualizer',
         remappings=[
             ('input/route', '/planning/mission_planning/route'),
             ('output/goal_pose',
@@ -56,4 +56,5 @@ def generate_launch_description():
     )
     return launch.LaunchDescription([
         node1,
+        node2
     ])
