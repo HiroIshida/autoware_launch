@@ -62,6 +62,7 @@ def generate_launch_description():
                 "~/input/points_no_ground",
                 "/perception/obstacle_segmentation/pointcloud",
             ),
+            ("~/input/extra_occgrid", "/perception/occupancy_grid_map/map"),
             ("~/input/vector_map", "/map/vector_map"),
             ("~/input/scenario", "/planning/scenario_planning/scenario"),
             ("~/output/grid_map", "costmap_generator/grid_map"),
@@ -69,6 +70,7 @@ def generate_launch_description():
         ],
         parameters=[
             {
+                "use_extra_occgrid": True,
                 "activate_by_scenario": False,
                 "costmap_frame": "map",
                 "vehicle_frame": "base_link",
